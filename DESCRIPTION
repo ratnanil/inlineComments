@@ -15,5 +15,6 @@ Imports:
   glue,
   here,
   shiny,
+  shinyAce,
   stringr,
   rstudioapi

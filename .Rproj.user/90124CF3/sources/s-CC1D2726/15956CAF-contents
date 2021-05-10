@@ -1,4 +1,0 @@
-Name: Insert Inline Comment
-Description: Creates a github issue with a comment on the specific line
-Binding: inlinecomment
-Interactive: true
