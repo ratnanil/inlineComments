@@ -1,8 +1,3 @@
-#' Insert Inline Comment
-#'
-#' Call this function as an inline comment
-#'
-#' @export
 inlinecomment <- function(){
   cont <- rstudioapi::getActiveDocumentContext()
   filepath <- cont$path
@@ -24,6 +19,7 @@ inlinecomment <- function(){
   server <- function(input, output) {
     observeEvent(input$done,{
       res <- system(glue::glue('gh issue create --title "{input$title}" --body "{lineref}<br/><br/>{input$body}"'))
+
       print(res)
       shiny::stopApp()
     })
