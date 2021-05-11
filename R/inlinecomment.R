@@ -17,7 +17,7 @@ inlinecomment <- function(){
   ui <- shiny::fluidPage(
     shiny::actionButton("done", "Create issue"),
     shiny::textInput("title", "Issue Title", width = "100%"),
-    shinyAce::aceEditor("body", mode = "markdown", height = "200px"),
+    shinyAce::aceEditor("body", mode = "markdown", height = "200px", wordWrap = TRUE),
 
   )
   server <- function(input, output) {
