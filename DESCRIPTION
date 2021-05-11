@@ -13,7 +13,6 @@ RoxygenNote: 7.1.1
 Imports:
   git2r,
   glue,
-  here,
   rprojroot,
   shiny,
   shinyAce,
