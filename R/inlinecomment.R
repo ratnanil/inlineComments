@@ -1,7 +1,7 @@
 inlinecomment <- function(){
   cont <- rstudioapi::getActiveDocumentContext()
   filepath <- cont$path
-  rootpath <- here::here()
+  rootpath <- rprojroot::find_root(rprojroot::is_git_root)
   filepath <- stringr::str_remove(filepath, rootpath)
   firstline <- cont$selection[[1]]$range$start[[1]]
   lastline <- cont$selection[[1]]$range$end[[1]]
