@@ -33,7 +33,7 @@ inlinecomment <- function(){
           easyClose = TRUE),
         )
     })
-    observeEvent(input$ok, {shiny::stopApp()})
+    shiny::observeEvent(input$ok, {shiny::stopApp()})
   }
   shiny::shinyApp(ui, server)
 }
