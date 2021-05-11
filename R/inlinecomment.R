@@ -24,12 +24,12 @@ inlinecomment <- function(){
   server <- function(input, output) {
     observeEvent(input$done,{
       respo <- gh::gh("POST /repos/{owner}/{repo}/issues", owner = remote_user, repo = remote_repo, title = input$title, body = glue::glue("{lineref}<br/><br/>{input$body}"))
-      Sys.sleep(1)
+      Sys.sleep(0.5)
       shiny::showModal(
         shiny::modalDialog(
           title = "Issue created",
           shiny::HTML(glue::glue('Issue created here: <a href = "{respo$html_url}">{respo$html_url}</a>')),
-          footer = actionButton("ok", "OK"),
+          footer = shiny::actionButton("ok", "OK"),
           easyClose = TRUE),
         )
     })
