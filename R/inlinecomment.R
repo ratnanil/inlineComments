@@ -22,9 +22,10 @@ inlinecomment <- function(){
   )
   server <- function(input, output) {
     observeEvent(input$done,{
-      # res <- system(glue::glue('gh issue create --title "{input$title}" --body "{lineref}<br/><br/>{input$body}"'))
-      gh::gh("POST /repos/{owner}/{repo}/issues", owner = remote_user, repo = remote_repo, title = input$title, body = glue::glue("{lineref}<br/><br/>{input$body}"))
-      shiny::stopApp()
+      respo <- gh::gh("POST /repos/{owner}/{repo}/issues", owner = remote_user, repo = remote_repo, title = input$title, body = glue::glue("{lineref}<br/><br/>{input$body}"))
+      Sys.sleep(1)
+      shiny::showModal(shiny::modalDialog(title = "Issue created",glue::glue('See {respo$html_url}'),easyClose = TRUE))
+      # shiny::stopApp()
     })
   }
   shiny::shinyApp(ui, server)
