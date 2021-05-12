@@ -15,16 +15,30 @@ inlinecomment <- function(){
 
   lineref <- glue::glue("https://{remote_server}/{remote_user}/{remote_repo}/blob/{sha}{filepath}#L{firstline}-L{lastline}")
   ui <- shiny::fluidPage(
-    shiny::actionButton("done", "Create issue"),
-    shiny::textInput("title", "Issue Title", width = "60%"),
-    shiny::HTML(glue::glue('<a href = "{lineref}">{lineref}</a>')),
-    shinyAce::aceEditor("body", mode = "markdown", height = "200px", wordWrap = TRUE),
+    shiny::fluidRow(
+      shiny::column(12,
+               shiny::actionButton("done", "Create issue"),
+               # shiny::selectInput("remote","",remote_url,selected = remote_url[1], width = "60%")
+             )
+
+
+
+    ),
+    shiny::fluidRow(
+      shiny::column(12,
+             shiny::textInput("title",label = "", width = "60%",placeholder = "Issue Title"),
+             shiny::HTML(glue::glue('<a href = "{lineref}">{lineref}</a>')),
+             shinyAce::aceEditor("body", mode = "markdown", height = "200px", wordWrap = TRUE),
+      )
+
+    )
+
 
   )
   server <- function(input, output) {
     shiny::observeEvent(input$done,{
       if(stringr::str_length(input$title) == 0){
-        showModal(modalDialog("Title cannot be empty",easyClose = TRUE))
+        showModal(modalDialog("You need to provide a title",title = "Title is empty",easyClose = TRUE))
       } else{
         respo <- gh::gh("POST /repos/{owner}/{repo}/issues", owner = remote_user, repo = remote_repo, title = input$title, body = glue::glue("{lineref}<br/><br/>{input$body}"))
         Sys.sleep(0.5)
