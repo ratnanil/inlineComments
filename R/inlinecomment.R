@@ -1,11 +1,11 @@
-inlinecomment <- function(){
+inlinecomment <- function(remote_url = NULL){
   cont <- rstudioapi::getActiveDocumentContext()
   filepath <- cont$path
   rootpath <- rprojroot::find_root(rprojroot::is_git_root)
   filepath <- stringr::str_remove(filepath, rootpath)
   firstline <- cont$selection[[1]]$range$start[[1]]
   lastline <- cont$selection[[1]]$range$end[[1]]
-  remote_url <- git2r::remote_url()
+  if(is.null(remote_url)) remote_url <- git2r::remote_url()
   remote_addr <- gh_username_repo(remote_url)
   remote_server <- remote_addr$server
   remote_user <- remote_addr$username
