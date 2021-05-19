@@ -66,7 +66,7 @@ For more information, checkout the <a href = 'https://guides.github.com/pdfs/mar
 
         }),
         shiny::tabPanel("Preview",{
-          htmlOutput("knitDoc")
+          shiny::htmlOutput("knitDoc")
         }),
         shiny::tabPanel("Help",{
           # shiny::HTML(knitr::knit2html(text = isolate(markdown_examples), fragment.only = TRUE, quiet = TRUE))
