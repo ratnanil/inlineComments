@@ -8,8 +8,11 @@ inlinecomment <- function(){
   remote_url <- git2r::remote_url()
   if(length(remote_url)>1){
     remote_url <- remote_url[1]
-    multiple_remotes <- TRUE
+    multiple_remotes <- "<b style='color:red;'>Warning: multiple remotes detected. Currently, you cannot choose which remote to push to.</b>"
+  } else{
+    multiple_remotes <- ""
   }
+
   remote_addr <- gh_username_repo(remote_url)
   remote_server <- remote_addr$server
   remote_user <- remote_addr$username
@@ -19,13 +22,13 @@ inlinecomment <- function(){
 
   markdown_examples <- "
 
-You can use syntax highlighting within your issue.
+You can use syntax highlighting with markdown within your issue.
 
 <ul>
-<li>Wrapping words inbetween *single asterix* will render your text cursive, like <i>this</i>.</li>
-<li> Using **double asterix**` will render your text bold, like <b>this</b> </li>
+<li>Wrapping words inbetween <code>*single asterix*</code> will render your text cursive, like <i>this</i>.</li>
+<li> Using <code>**double asterix**</code> will render your text bold, like <b>this</b> </li>
 <li>  To make code examples, place the code in between two lines containg three
-backticks (`` ``` `` ), like so:</li>
+backticks (<code>```</code>), like so:</li>
 </ul>
 
 
@@ -45,6 +48,7 @@ For more information, checkout the <a href = 'https://guides.github.com/pdfs/mar
     shiny::fluidRow(
       shiny::column(12,
                     shiny::actionButton("done", "Create issue"),
+                    shiny::actionButton("cancel", "Cancel"),
                     # shiny::selectInput("remote","",remote_url,selected = remote_url[1], width = "60%")
       )
 
@@ -60,7 +64,7 @@ For more information, checkout the <a href = 'https://guides.github.com/pdfs/mar
         shiny::tabPanel("Editor",{
           shiny::column(12,
                         shinyAce::aceEditor("body", mode = "markdown", height = "200px", wordWrap = TRUE),
-                        shiny::HTML("<b style='color:red;'>Warning: multiple remotes detected. Currently, you cannot choose which remote to push to.</b>")
+                        shiny::HTML(multiple_remotes)
 
           )
 
@@ -97,6 +101,8 @@ For more information, checkout the <a href = 'https://guides.github.com/pdfs/mar
       }
     })
     shiny::observeEvent(input$ok, {shiny::stopApp()})
+    shiny::observeEvent(input$cancel, {shiny::stopApp()})
+
 
     output$knitDoc <- shiny::renderUI({
       input$mytabset
