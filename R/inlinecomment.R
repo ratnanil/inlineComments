@@ -1,11 +1,15 @@
-inlinecomment <- function(remote_url = NULL){
+inlinecomment <- function(){
   cont <- rstudioapi::getActiveDocumentContext()
   filepath <- cont$path
   rootpath <- rprojroot::find_root(rprojroot::is_git_root)
   filepath <- stringr::str_remove(filepath, rootpath)
   firstline <- cont$selection[[1]]$range$start[[1]]
   lastline <- cont$selection[[1]]$range$end[[1]]
-  if(is.null(remote_url)) remote_url <- git2r::remote_url()
+  remote_url <- git2r::remote_url()
+  if(length(remote_url)>1){
+    remote_url <- remote_url[1]
+    multiple_remotes <- TRUE
+  }
   remote_addr <- gh_username_repo(remote_url)
   remote_server <- remote_addr$server
   remote_user <- remote_addr$username
@@ -17,19 +21,32 @@ inlinecomment <- function(remote_url = NULL){
   ui <- shiny::fluidPage(
     shiny::fluidRow(
       shiny::column(12,
-               shiny::actionButton("done", "Create issue"),
-               # shiny::selectInput("remote","",remote_url,selected = remote_url[1], width = "60%")
-             )
+                    shiny::actionButton("done", "Create issue"),
+                    # shiny::selectInput("remote","",remote_url,selected = remote_url[1], width = "60%")
+      )
 
 
 
     ),
     shiny::fluidRow(
-      shiny::column(12,
-             shiny::textInput("title",label = "", width = "60%",placeholder = "Issue Title"),
-             shiny::HTML(glue::glue('<a href = "{lineref}">{lineref}</a>')),
-             shinyAce::aceEditor("body", mode = "markdown", height = "200px", wordWrap = TRUE),
+      shiny::textInput("title",label = "", width = "60%",placeholder = "Issue Title"),
+      shiny::HTML(glue::glue('Referencing line: <a href = "{lineref}">{lineref}</a>'))
+    ),
+    shiny::fluidRow(
+      shiny::tabsetPanel(id = "mytabset",
+        shiny::tabPanel("Editor",{
+          shiny::column(12,
+                        shinyAce::aceEditor("body", mode = "markdown", height = "200px", wordWrap = TRUE),
+                        shiny::HTML("<b style='color:red;'>Warning: multiple remotes detected. Currently, you cannot choose which remote to push to.</b>")
+
+          )
+
+        }),
+        shiny::tabPanel("Preview",{
+          htmlOutput("knitDoc")
+        })
       )
+
 
     )
 
@@ -52,6 +69,11 @@ inlinecomment <- function(remote_url = NULL){
       }
     })
     shiny::observeEvent(input$ok, {shiny::stopApp()})
+
+    output$knitDoc <- shiny::renderUI({
+      input$mytabset
+      shiny::HTML(knitr::knit2html(text = isolate(input$body), fragment.only = TRUE, quiet = TRUE))
+    })
   }
   shiny::shinyApp(ui, server)
 }
