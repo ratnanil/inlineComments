@@ -17,6 +17,29 @@ inlinecomment <- function(){
 
   sha <- git2r::commits(n = 1)[[1]]$sha
 
+  markdown_examples <- "
+
+You can use syntax highlighting within your issue.
+
+<ul>
+<li>Wrapping words inbetween *single asterix* will render your text cursive, like <i>this</i>.</li>
+<li> Using **double asterix**` will render your text bold, like <b>this</b> </li>
+<li>  To make code examples, place the code in between two lines containg three
+backticks (`` ``` `` ), like so:</li>
+</ul>
+
+
+<pre>
+  <code>
+    ```
+    your code example
+    ```
+  </code>
+</pre>
+
+For more information, checkout the <a href = 'https://guides.github.com/pdfs/markdown-cheatsheet-online.pdf'>markdown cheatsheet</a>
+"
+
   lineref <- glue::glue("https://{remote_server}/{remote_user}/{remote_repo}/blob/{sha}{filepath}#L{firstline}-L{lastline}")
   ui <- shiny::fluidPage(
     shiny::fluidRow(
@@ -30,7 +53,7 @@ inlinecomment <- function(){
     ),
     shiny::fluidRow(
       shiny::textInput("title",label = "", width = "60%",placeholder = "Issue Title"),
-      shiny::HTML(glue::glue('Referencing line: <a href = "{lineref}">{lineref}</a>'))
+      shiny::HTML(glue::glue('Referencing line(s): <a href = "{lineref}">{lineref}</a>'))
     ),
     shiny::fluidRow(
       shiny::tabsetPanel(id = "mytabset",
@@ -44,6 +67,11 @@ inlinecomment <- function(){
         }),
         shiny::tabPanel("Preview",{
           htmlOutput("knitDoc")
+        }),
+        shiny::tabPanel("Help",{
+          # shiny::HTML(knitr::knit2html(text = isolate(markdown_examples), fragment.only = TRUE, quiet = TRUE))
+          shiny::HTML(markdown_examples)
+
         })
       )
 
