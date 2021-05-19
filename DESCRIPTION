@@ -1,11 +1,12 @@
 Package: inlineComments
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Creates Github Issues With Line References
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Nils Ratnaweera
+Maintainer: Nils Ratnaweera <rata@zhaw.ch>
+Description: This package an RStudio addin which, after assigning
+    it a keyboard shortcut, allows creating Github Issues that 
+    reference specific lines of a text file (typically .R or .Rmd). 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
